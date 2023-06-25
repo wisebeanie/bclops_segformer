@@ -76,7 +76,7 @@ class CustomDataset(Dataset):
                  img_dir,
                  img_suffix='.jpg',
                  ann_dir=None,
-                 seg_map_suffix='.png',
+                 seg_map_suffix='.jpg',
                  split=None,
                  data_root=None,
                  test_mode=False,
@@ -205,7 +205,8 @@ class CustomDataset(Dataset):
         ann_info = self.get_ann_info(idx)
         results = dict(img_info=img_info, ann_info=ann_info)
         self.pre_pipeline(results)
-        return self.pipeline(results)
+        results = self.pipeline(results)
+        return results
 
     def prepare_test_img(self, idx):
         """Get testing data after pipeline.
@@ -334,6 +335,7 @@ class CustomDataset(Dataset):
                 reduce(np.union1d, [np.unique(_) for _ in gt_seg_maps]))
         else:
             num_classes = len(self.CLASSES)
+        num_classes = 2
         ret_metrics = eval_metrics(
             results,
             gt_seg_maps,

@@ -99,8 +99,8 @@ class BaseSegmentor(nn.Module):
             assert all(shape == ori_shapes[0] for shape in ori_shapes)
             img_shapes = [_['img_shape'] for _ in img_meta]
             assert all(shape == img_shapes[0] for shape in img_shapes)
-            pad_shapes = [_['pad_shape'] for _ in img_meta]
-            assert all(shape == pad_shapes[0] for shape in pad_shapes)
+#            pad_shapes = [_['pad_shape'] for _ in img_meta]
+#            assert all(shape == pad_shapes[0] for shape in pad_shapes)
 
         if num_augs == 1:
             return self.simple_test(imgs[0], img_metas[0], **kwargs)
@@ -200,7 +200,8 @@ class BaseSegmentor(nn.Module):
             # reduce loss when distributed training
             if dist.is_available() and dist.is_initialized():
                 loss_value = loss_value.data.clone()
-                dist.all_reduce(loss_value.div_(dist.get_world_size()))
+                # dist.all_reduce(loss_value.div_(dist.get_world_size()))
+                
             log_vars[loss_name] = loss_value.item()
 
         return loss, log_vars
